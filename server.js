@@ -106,3 +106,6 @@ app.get("/list", (req, res) => {
 });
 
 //
+app.delete("/delete", (req, res) => {
+  console.log(req.body);
+});
