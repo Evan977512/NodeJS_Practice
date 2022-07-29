@@ -76,7 +76,7 @@ app.post("/add", (req, res) => {
     // 총 게시물 변수에 저장
     var totalPost = result.totalpost;
 
-    db.collection("post").insertOne({ _id: totalPost + 1, todoList: req.body.todolist, DueDate: req.body.duedate }, function () {
+    db.collection("post").insertOne({ _id: totalPost + 1, todoList: req.body.todolist, DueDate: req.body.duedate }, () => {
       console.log("저장완료");
 
       // couter라는 콜렉션에 있는 totalPost 항목도 1 증가시켜야 함
@@ -96,7 +96,7 @@ app.post("/add", (req, res) => {
 app.get("/list", (req, res) => {
   // db.collection("post") -> 이게 거의 디폴트 시작이라고 보면 될거같다. post 콜렉션에 접근하는 코드
   // DB에 저장된 post라는 collection안에 있는 모든 데이터를 가져와라
-  // EJS는 sendFile을 사용하면 안된다....
+  // EJS는 sendFile을 사용하면 안된다....render을 사용
   db.collection("post")
     .find()
     .toArray((error, result) => {
@@ -105,7 +105,8 @@ app.get("/list", (req, res) => {
     });
 });
 
-//
-app.delete("/delete", (req, res) => {
+// 삭제요청 처리하는 코드
+app.delete("/delete", function (req, res) {
   console.log(req.body);
+  // req.body에 담겨온 게시물번호를 가진 글을 db에서 찾아서 삭제해주세요.
 });

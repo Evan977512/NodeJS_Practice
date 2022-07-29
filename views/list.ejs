@@ -42,6 +42,7 @@
       <br />
       <% } %>
     </div> -->
+
     <h3 class="ml-2 my-3">List of todolist from MongoDB</h3>
 
     <ul class="list-group">
@@ -60,10 +61,8 @@
       $.ajax({
         method: "DELETE",
         url: "/delete",
-        data: "postID",
-      }).done(function (result) {
-        console.log(result);
-      });
+        data: { _id: 1 },
+      }).done(function (result) {});
     </script>
 
     <!-- Optional JavaScript -->
