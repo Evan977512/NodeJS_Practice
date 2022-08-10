@@ -100,13 +100,19 @@ app.get("/list", (req, res) => {
   db.collection("post")
     .find()
     .toArray((error, result) => {
-      console.log(result);
+      console.log(result); // show all the lists in 'post' collection.
       res.render("list.ejs", { posts: result });
     });
 });
 
 // 삭제요청 처리하는 코드
-app.delete("/delete", function (req, res) {
+app.delete("/delete", (req, res) => {
   console.log(req.body);
-  // req.body에 담겨온 게시물번호를 가진 글을 db에서 찾아서 삭제해주세요.
+  req.body._id = parseInt(req.body._id);
+  // req.body에 담겨진 게시물번호를 가진 글을 db에서 찾아서 삭제해주세요.
+  db.collection("post").deleteOne(req.body, function (error, result) {
+    if (error) throw error;
+    console.log("delete complete");
+    res.status(200).send({ message: "success" });
+  });
 });
