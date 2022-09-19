@@ -11,7 +11,7 @@ app.set("view engine", "ejs");
 var db;
 
 // DB 연결
-MongoClient.connect("mongodb+srv://emdwlekr:TBVxY7PnrLhBmUoS@cluster0.wuba1f8.mongodb.net/?retryWrites=true&w=majority", function (err, client) {
+MongoClient.connect("mongodb+srv://emdwlekr:rladudcks91@cluster0.wuba1f8.mongodb.net/?retryWrites=true&w=majority", function (err, client) {
   // 연결되면 할 일
   if (err) return console.log(err);
 
@@ -111,8 +111,15 @@ app.delete("/delete", (req, res) => {
   req.body._id = parseInt(req.body._id);
   // req.body에 담겨진 게시물번호를 가진 글을 db에서 찾아서 삭제해주세요.
   db.collection("post").deleteOne(req.body, function (error, result) {
-    if (error) throw error;
     console.log("delete complete");
     res.status(200).send({ message: "success" });
+  });
+});
+
+// detail page.
+app.get("/detail/:id", (req, res) => {
+  db.collection("post").findOne({ _id: parseInt(req.params.id) }, (err, result) => {
+    console.log(result);
+    res.render("detail.ejs", { data: result });
   });
 });

@@ -27,57 +27,9 @@
       </div>
     </nav>
 
-    <h4>this is Main Page</h4>
-    <form action="/write" method="GET">
-      <button>Add Another TodoList</button>
-    </form>
-
-    <!-- <br />
-    <div>
-      <% for(var i = 0; i < posts.length; i++){ %>
-      <h4>name of todolist: <%= posts[i].todoList %></h4>
-      <h4>Due Date:<%= posts[i].DueDate %></h4>
-      <button>DELETE</button>
-      <br />
-      <br />
-      <% } %>
-    </div> -->
-
-    <h3 class="ml-2 my-3">List of todolist from MongoDB</h3>
-
-    <ul class="list-group">
-      <% for (var i = 0; i < posts.length; i++){ %>
-      <li class="list-group-item">
-        <p>number: <%= posts[i]._id %></p>
-        <h4>name of todolist: <%= posts[i].todoList %></h4>
-        <h4>Due Date:<%= posts[i].DueDate %></h4>
-        <button class="delete" data-id="<%= posts[i]._id %>">DELETE</button>
-      </li>
-      <% } %>
-    </ul>
-
-    <script src="https://code.jquery.com/jquery-3.4.1.min.js"></script>
-
-    <script>
-      $(".delete").click((e) => {
-        var number = e.target.dataset.id;
-        var action = $(this);
-        $.ajax({
-          method: "DELETE",
-          url: "/delete",
-          data: { _id: number },
-        })
-          .done(function (result) {
-            // 요청이 성공하면 실행할 코드
-            console.log("wow!!! delete!!");
-            action.parent("li").fadeOut();
-          })
-          // 요청이 실패시 실행할 코드.
-          .fail(function (xhr, testStatus, errorThrown) {
-            console.log(xhr, testStatus, errorThrown);
-          });
-      });
-    </script>
+    <h4>detail page</h4>
+    <h4>title: <%= data.todoList %></h4>
+    <h4>date: <%= data.DueDate %></h4>
 
     <!-- Optional JavaScript -->
     <!-- jQuery first, then Popper.js, then Bootstrap JS -->
