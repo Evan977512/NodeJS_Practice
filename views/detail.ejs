@@ -8,28 +8,25 @@
     <!-- Bootstrap CSS -->
     <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap@4.4.1/dist/css/bootstrap.min.css" integrity="sha384-Vkoo8x4CGsO3+Hhxv8T/Q5PaXtkKtu6ug5TOeNV6gBiFeWPGFN9MuhOf23Q9Ifjh" crossorigin="anonymous" />
 
+    <link rel="stylesheet" href="/public/main.css"></link>
     <title>Hello, world!</title>
   </head>
   <body>
-    <nav class="navbar navbar-expand-lg bg-light">
-      <div class="container-fluid">
-        <a class="navbar-brand" href="#">Todo App</a>
-        <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarNavAltMarkup" aria-controls="navbarNavAltMarkup" aria-expanded="false" aria-label="Toggle navigation">
-          <span class="navbar-toggler-icon"></span>
-        </button>
-        <div class="collapse navbar-collapse" id="navbarNavAltMarkup">
-          <div class="navbar-nav">
-            <a class="nav-link active" aria-current="page" href="#">Home</a>
-            <a class="nav-link" href="#">Pricing</a>
-            <a class="nav-link disabled">temporary</a>
-          </div>
+
+    <%- include('nav.html') %>
+
+    <div class="container mt-4 pt-4">
+      <h4 class="text-center">detail page</h4>
+
+      <div class="card" style="width: 100%">
+        <div class="card-body">
+          <h5 class="card-title"><%= data.todoList %></h5>
+          <h6 class="card-subtitle mb-2 text-muted"><%= data.DueDate %></h6>
+          <p class="card-text">Some quick example text to build on the card title and make up the bulk of the card's content.</p>
+          <a href="#" class="card-link">Update</a>
         </div>
       </div>
-    </nav>
-
-    <h4>detail page</h4>
-    <h4>title: <%= data.todoList %></h4>
-    <h4>date: <%= data.DueDate %></h4>
+    </div>
 
     <!-- Optional JavaScript -->
     <!-- jQuery first, then Popper.js, then Bootstrap JS -->

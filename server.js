@@ -8,6 +8,9 @@ const MongoClient = require("mongodb").MongoClient;
 // EJS 사용하도록 설정
 app.set("view engine", "ejs");
 
+// middleware, 나는 public 파일을 보관하기 위해 public 폴더를 사용하곘다 라는 뜻
+app.use("/public", express.static("public"));
+
 var db;
 
 // DB 연결
@@ -38,7 +41,7 @@ app.get("/pet", function (req, res) {
 
 // HTML로 GET을 해보자.
 app.get("/", (req, res) => {
-  res.sendFile(__dirname + "/index.html");
+  res.render(__dirname + "/views/index.ejs");
 });
 
 // arrow function 을 사용해서 코드를 줄임
@@ -48,7 +51,7 @@ app.get("/beauty", (req, res) => {
 
 app.get("/write", (req, res) => {
   console.log("to write!!!!!");
-  res.sendFile(__dirname + "/write.html");
+  res.render(__dirname + "/views/write.ejs");
 });
 // 함수안에 함수가 있는걸 callback function 이라고 한다.
 
@@ -66,6 +69,7 @@ app.get("/write", (req, res) => {
  */
 app.post("/add", (req, res) => {
   res.send("Submission Complete");
+
   //   console.log(req.body);
   //   console.log(req.body.todolist);
   //   console.log(req.body.duedate);
@@ -121,5 +125,16 @@ app.get("/detail/:id", (req, res) => {
   db.collection("post").findOne({ _id: parseInt(req.params.id) }, (err, result) => {
     console.log(result);
     res.render("detail.ejs", { data: result });
+  });
+});
+
+app.get("/edit/:id", (req, res) => {
+  db.collection("post").findOne({ _id: parseInt(req.params.id) }, (err, result) => {
+    try {
+      console.log(result);
+      res.render("edit.ejs", { post: result });
+    } catch (err) {
+      console.log(err);
+    }
   });
 });
