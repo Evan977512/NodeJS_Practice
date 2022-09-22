@@ -158,3 +158,18 @@ app.put("/edit", (req, res) => {
     res.redirect("/list");
   });
 });
+
+// session 방식 login function create
+const passport = require("passport");
+const localStrategy = require("passport-local").Strategy;
+const session = requrie("express-session");
+
+// middleware....??? what the heck???
+/**
+ * app.use('middleware'); -> 나는 미들웨어를 사용하곘다는 뜻
+ * 웹서버는 요청 - 응답 해주는 머신
+ * 요청하고 응답 중간에 뭔가 동작을 실행시키고 싶으면 app.use()를 사용한다....?
+ */
+app.use(session({ secret: "secretCode", resave: true, saveUninitialized: false }));
+app.use(passport.initialize());
+app.use(passport.session());
