@@ -162,7 +162,7 @@ app.put("/edit", (req, res) => {
 // session 방식 login function create
 const passport = require("passport");
 const localStrategy = require("passport-local").Strategy;
-const session = requrie("express-session");
+const session = require("express-session");
 
 // middleware....??? what the heck???
 /**
@@ -173,3 +173,45 @@ const session = requrie("express-session");
 app.use(session({ secret: "secretCode", resave: true, saveUninitialized: false }));
 app.use(passport.initialize());
 app.use(passport.session());
+
+// login function
+app.get("/login", (req, res) => {
+  res.render("login.ejs");
+});
+
+// login authentication
+app.post(
+  "/login",
+  passport.authenticate("local", {
+    failureRedirect: "/fail",
+  }),
+  (req, res) => {
+    res.redirect("/");
+  }
+);
+
+passport.use(
+  new localStrategy(
+    {
+      usernameField: "id",
+      passwordField: "pw",
+
+      // 로그인 후 세션을 저장할 것인지 묻는 문구
+      session: true,
+      passReqToCallback: false,
+    },
+    (typedId, typedPw, done) => {
+      // console.log(typedId, typedPw);
+      db.collection("login").findOne({ id: typedId }, (err, result) => {
+        if (err) return done(err);
+
+        if (!result) return done(null, false, { message: "id do not exist" });
+        if (typedPw == result.pw) {
+          return done(null, result);
+        } else {
+          return done(null, false, { message: "pw wrong" });
+        }
+      });
+    }
+  )
+);
