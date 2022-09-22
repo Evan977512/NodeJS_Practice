@@ -11,6 +11,10 @@ app.set("view engine", "ejs");
 // middleware, 나는 public 파일을 보관하기 위해 public 폴더를 사용하곘다 라는 뜻
 app.use("/public", express.static("public"));
 
+// utilize method-override module
+const methodOverride = require("method-override");
+app.use(methodOverride("_method"));
+
 var db;
 
 // DB 연결
@@ -68,7 +72,7 @@ app.get("/write", (req, res) => {
  * 2개의 데이터(list, duedate)를 'post'라는 컬렉션에 저장하라
  */
 app.post("/add", (req, res) => {
-  res.send("Submission Complete");
+  // res.send("Submission Complete");
 
   //   console.log(req.body);
   //   console.log(req.body.todolist);
@@ -90,6 +94,7 @@ app.post("/add", (req, res) => {
       });
     });
   });
+  res.redirect("/list");
 });
 
 /**
@@ -136,5 +141,20 @@ app.get("/edit/:id", (req, res) => {
     } catch (err) {
       console.log(err);
     }
+  });
+});
+
+app.put("/edit", (req, res) => {
+  // form에 담긴 제목, 날짜데이터를 가지고 db.collection('post')에 업데이트 함
+
+  /**
+   * updateOne({}, {}, function(err, result){})
+   * 첫번째 {} == 어떤 게시물을수정 할 것인가
+   * 두번쨰 {} == 수정값
+   * 세번째 {} == 콜백함수
+   */
+  db.collection("post").updateOne({ _id: parseInt(req.body.id) }, { $set: { todoList: req.body.todolist, DueDate: req.body.duedate } }, (err, result) => {
+    console.log("update complete");
+    res.redirect("/list");
   });
 });
