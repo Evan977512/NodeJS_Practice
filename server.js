@@ -2,6 +2,11 @@
 const express = require("express");
 const app = express();
 
+// add .env library
+require("dotenv").config();
+console.log(typeof process.env.DB_URL);
+console.log(typeof process.env.PORT);
+
 // The MongoClient class is a class that allows for making Connections to MongoDB.
 const MongoClient = require("mongodb").MongoClient;
 
@@ -18,7 +23,8 @@ app.use(methodOverride("_method"));
 var db;
 
 // DB 연결
-MongoClient.connect("mongodb+srv://emdwlekr:rladudcks91@cluster0.wuba1f8.mongodb.net/?retryWrites=true&w=majority", function (err, client) {
+MongoClient.connect(process.env.DB_URL, function (err, client) {
+  // console.log(process.env.DB_URL);
   // 연결되면 할 일
   if (err) return console.log(err);
 
@@ -27,7 +33,7 @@ MongoClient.connect("mongodb+srv://emdwlekr:rladudcks91@cluster0.wuba1f8.mongodb
   //   console.log("실행중");
   // });
 
-  app.listen(8080, function () {
+  app.listen(parseInt(process.env.PORT), function () {
     console.log("MongoDB + NodeJs Server is running on port 8080");
   });
 });
@@ -190,6 +196,20 @@ app.post(
   }
 );
 
+app.get("/mypage", didYouLoggedIn, (req, res) => {
+  console.log(req.user);
+  res.render("mypage.ejs", { User: req.user });
+});
+
+function didYouLoggedIn(req, res, next) {
+  // req.user가 있으면... 없으면....
+  if (req.user) {
+    next();
+  } else {
+    res.send("did not logged in");
+  }
+}
+
 passport.use(
   new localStrategy(
     {
@@ -201,10 +221,9 @@ passport.use(
       passReqToCallback: false,
     },
     (typedId, typedPw, done) => {
-      // console.log(typedId, typedPw);
+      console.log(typedId, typedPw);
       db.collection("login").findOne({ id: typedId }, (err, result) => {
         if (err) return done(err);
-
         if (!result) return done(null, false, { message: "id do not exist" });
         if (typedPw == result.pw) {
           return done(null, result);
@@ -215,3 +234,13 @@ passport.use(
     }
   )
 );
+
+passport.serializeUser((user, done) => {
+  done(null, user.id);
+});
+
+passport.deserializeUser((id, done) => {
+  db.collection("login").findOne({ id: id }, (err, result) => {
+    done(null, result);
+  });
+});
