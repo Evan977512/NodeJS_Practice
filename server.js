@@ -4,8 +4,6 @@ const app = express();
 
 // add .env library
 require("dotenv").config();
-console.log(typeof process.env.DB_URL);
-console.log(typeof process.env.PORT);
 
 // The MongoClient class is a class that allows for making Connections to MongoDB.
 const MongoClient = require("mongodb").MongoClient;
