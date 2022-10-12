@@ -1,0 +1,88 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <!-- Required meta tags -->
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no" />
+
+    <!-- Bootstrap CSS -->
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap@4.4.1/dist/css/bootstrap.min.css" integrity="sha384-Vkoo8x4CGsO3+Hhxv8T/Q5PaXtkKtu6ug5TOeNV6gBiFeWPGFN9MuhOf23Q9Ifjh" crossorigin="anonymous" />
+    <link rel="stylesheet" href="/public/main.css" />
+    <script src="http://code.jquery.com/jquery-1.11.0.min.js"></script>
+    <title>Hello, world!</title>
+  </head>
+
+  <body>
+    <%- include('nav.html') %>
+
+    <h4>this is Main Page</h4>
+    <form action="/write" method="GET">
+      <button>Add Another TodoList</button>
+    </form>
+
+    <!-- <br />
+    <div>
+      <% for(var i = 0; i < posts.length; i++){ %>
+      <h4>name of todolist: <%= posts[i].todoList %></h4>
+      <h4>Due Date:<%= posts[i].DueDate %></h4>
+      <button>DELETE</button>
+      <br />
+      <br />
+      <% } %>
+    </div> -->
+    <h3 class="ml-2 my-3 text-center">List of todolist from MongoDB</h3>
+
+    <div class="container input-group mb-2">
+      <input class="form-control" id="search-input" />
+      <button class="input-group-append btn btn-danger" id="search">search</button>
+    </div>
+
+    <script>
+      $("#search").click(function () {
+        var input = $("#search-input").val();
+        window.location.replace("/search?value=" + input);
+      });
+    </script>
+
+    <div class="container">
+      <ul class="list-group">
+        <% for (var i = 0; i < posts.length; i++){ %>
+        <li class="list-group-item">
+          <p>number: <%= posts[i]._id %></p>
+          <h4>name of todolist: <%= posts[i].todoList %></h4>
+          <h4>Due Date:<%= posts[i].DueDate %></h4>
+          <button class="delete btn btn-danger" data-id="<%= posts[i]._id %>">DELETE</button>
+        </li>
+        <% } %>
+      </ul>
+    </div>
+
+    <script src="https://code.jquery.com/jquery-3.4.1.min.js"></script>
+
+    <script>
+      $(".delete").click((e) => {
+        var number = e.target.dataset.id;
+        var action = $(this);
+        $.ajax({
+          method: "DELETE",
+          url: "/delete",
+          data: { _id: number },
+        })
+          .done(function (result) {
+            // 요청이 성공하면 실행할 코드
+            console.log("wow!!! delete!!");
+            action.parent("li").fadeOut();
+          })
+          // 요청이 실패시 실행할 코드.
+          .fail(function (xhr, testStatus, errorThrown) {
+            console.log(xhr, testStatus, errorThrown);
+          });
+      });
+    </script>
+
+    <!-- Optional JavaScript -->
+    <!-- jQuery first, then Popper.js, then Bootstrap JS -->
+    <script src="https://cdn.jsdelivr.net/npm/popper.js@1.16.0/dist/umd/popper.min.js" integrity="sha384-Q6E9RHvbIyZFJoft+2mJbHaEWldlvI9IOYy5n3zV9zzTtmI3UksdQRVvoxMfooAo" crossorigin="anonymous"></script>
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@4.4.1/dist/js/bootstrap.min.js" integrity="sha384-wfSDF2E50Y2D1uUdj0O3uMBJnjuUD4Ih7YwaYd1iqfktj0Uod8GCExl3Og8ifwB6" crossorigin="anonymous"></script>
+  </body>
+</html>

@@ -248,7 +248,8 @@ app.get("/search", (req, res) => {
   db.collection("post")
     .find({ todoList: searchInput })
     .toArray((err, result) => {
-      console.log(result);
+      // console.log(result);
       if (err) throw err;
+      res.render("search.ejs", { posts: result });
     });
 });
