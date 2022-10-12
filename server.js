@@ -242,3 +242,13 @@ passport.deserializeUser((id, done) => {
     done(null, result);
   });
 });
+
+app.get("/search", (req, res) => {
+  var searchInput = req.query.value;
+  db.collection("post")
+    .find({ todoList: searchInput })
+    .toArray((err, result) => {
+      console.log(result);
+      if (err) throw err;
+    });
+});

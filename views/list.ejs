@@ -8,6 +8,7 @@
     <!-- Bootstrap CSS -->
     <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap@4.4.1/dist/css/bootstrap.min.css" integrity="sha384-Vkoo8x4CGsO3+Hhxv8T/Q5PaXtkKtu6ug5TOeNV6gBiFeWPGFN9MuhOf23Q9Ifjh" crossorigin="anonymous" />
     <link rel="stylesheet" href="/public/main.css" />
+    <script src="http://code.jquery.com/jquery-1.11.0.min.js"></script>
     <title>Hello, world!</title>
   </head>
 
@@ -29,7 +30,6 @@
       <br />
       <% } %>
     </div> -->
-
     <h3 class="ml-2 my-3 text-center">List of todolist from MongoDB</h3>
 
     <div class="container input-group mb-2">
@@ -38,9 +38,9 @@
     </div>
 
     <script>
-      $("#search").click(() => {
-        var inputValue = $("#search-input").val();
-        window.location.replace("/search?value=" + inputValue);
+      $("#search").click(function () {
+        var input = $("#search-input").val();
+        window.location.replace("/search?value=" + input);
       });
     </script>
 
