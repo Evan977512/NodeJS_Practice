@@ -244,11 +244,10 @@ passport.deserializeUser((id, done) => {
 });
 
 app.get("/search", (req, res) => {
-  var searchInput = req.query.value;
   db.collection("post")
-    .find({ todoList: searchInput })
+    .find({ $text: { $search: req.query.value } })
     .toArray((err, result) => {
-      // console.log(result);
+      console.log(result);
       if (err) throw err;
       res.render("search.ejs", { posts: result });
     });
