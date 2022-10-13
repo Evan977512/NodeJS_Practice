@@ -244,8 +244,21 @@ passport.deserializeUser((id, done) => {
 });
 
 app.get("/search", (req, res) => {
+  var condition = [
+    {
+      $search: {
+        index: "todoList_search",
+        text: {
+          query: req.query.value,
+          path: "todoList", // 제목날짜 둘다 찾고 싶으면 ['제목', '날짜']
+        },
+      },
+    },
+  ];
+
   db.collection("post")
-    .find({ $text: { $search: req.query.value } })
+    //.find({ $text: { $search: req.query.value } })
+    .aggregate(condition)
     .toArray((err, result) => {
       console.log(result);
       if (err) throw err;
