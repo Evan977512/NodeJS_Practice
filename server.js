@@ -244,16 +244,22 @@ passport.deserializeUser((id, done) => {
 });
 
 app.get("/search", (req, res) => {
+  // 검색조건 중복 가능
   var condition = [
     {
       $search: {
         index: "todoList_search",
         text: {
           query: req.query.value,
-          path: "todoList", // 제목날짜 둘다 찾고 싶으면 ['제목', '날짜']
+          path: "todoList", // 제목날짜 둘다 찾고 싶으면 ['todoList', 'DueDate']
         },
       },
     },
+    {
+      $sort: { _id: 1 },
+    },
+    // score는 검색결과가 얼마나 match하는정도의 비율
+    { $project: { todoList: 1, _id: 0, score: { $meta: "searchScore" } } },
   ];
 
   db.collection("post")
