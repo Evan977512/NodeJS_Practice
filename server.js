@@ -237,7 +237,7 @@ app.post("/add", (req, res) => {
 });
 
 // 삭제요청 처리하는 코드
-app.delete("/delete", (req, res)ㅇ => {
+app.delete("/delete", (req, res) => {
   console.log(req.body);
   req.body._id = parseInt(req.body._id);
 
@@ -247,6 +247,7 @@ app.delete("/delete", (req, res)ㅇ => {
   db.collection("post").deleteOne(dataDelete, function (error, result) {
     console.log("delete complete");
     res.status(200).send({ message: "delete success" });
+    if (error) throw error;
   });
 });
 
