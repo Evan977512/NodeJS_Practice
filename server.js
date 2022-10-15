@@ -279,3 +279,7 @@ app.get("/search", (req, res) => {
       res.render("search.ejs", { posts: result });
     });
 });
+
+// api파일(shop.js) require로 불러오기
+app.use("/shop", require("./routes/shop.js"));
+app.use("/board/sub", require("./routes/board.js"));
