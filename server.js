@@ -72,36 +72,6 @@ app.get("/write", (req, res) => {
 // });
 
 /**
- * 어떤 사람이 /add 라는 경로로 post요청을 하면
- * 2개의 데이터(list, duedate)를 'post'라는 컬렉션에 저장하라
- */
-app.post("/add", (req, res) => {
-  // res.send("Submission Complete");
-
-  //   console.log(req.body);
-  //   console.log(req.body.todolist);
-  //   console.log(req.body.duedate);
-
-  // counter 콜렉션에 저장된 총 개시물 수를 세어보자
-  db.collection("counter").findOne({ name: "numberOfPost" }, (error, result) => {
-    console.log(result.totalpost);
-    // 총 게시물 변수에 저장
-    var totalPost = result.totalpost;
-
-    db.collection("post").insertOne({ _id: totalPost + 1, todoList: req.body.todolist, DueDate: req.body.duedate }, () => {
-      console.log("저장완료");
-
-      // couter라는 콜렉션에 있는 totalPost 항목도 1 증가시켜야 함
-      db.collection("counter").updateOne({ name: "numberOfPost" }, { $inc: { totalpost: 1 } }, (err, result) => {
-        if (err) throw err;
-        console.log("1 document updated");
-      });
-    });
-  });
-  res.redirect("/list");
-});
-
-/**
  * 저장된 데이터들을 새로운 페이지에 표시하는 코드를 작성해보자
 누군가가 /list로 경로로 GET요청을 하면
 저장된 데이터들을 html형식으로 보여주는 코드를 작성해보자
@@ -116,17 +86,6 @@ app.get("/list", (req, res) => {
       console.log(result); // show all the lists in 'post' collection.
       res.render("list.ejs", { posts: result });
     });
-});
-
-// 삭제요청 처리하는 코드
-app.delete("/delete", (req, res) => {
-  console.log(req.body);
-  req.body._id = parseInt(req.body._id);
-  // req.body에 담겨진 게시물번호를 가진 글을 db에서 찾아서 삭제해주세요.
-  db.collection("post").deleteOne(req.body, function (error, result) {
-    console.log("delete complete");
-    res.status(200).send({ message: "success" });
-  });
 });
 
 // detail page.
@@ -240,6 +199,54 @@ passport.serializeUser((user, done) => {
 passport.deserializeUser((id, done) => {
   db.collection("login").findOne({ id: id }, (err, result) => {
     done(null, result);
+  });
+});
+
+// signup function page
+app.post("/register", (req, res) => {
+  db.collection("login").insertOne({ id: req.body.id, pw: req.body.pw }, (err, result) => {
+    if (err) throw err;
+    res.redirect("/");
+  });
+});
+
+/**
+ * 어떤 사람이 /add 라는 경로로 post요청을 하면
+ * 2개의 데이터(list, duedate)를 'post'라는 컬렉션에 저장하라
+ */
+app.post("/add", (req, res) => {
+  // counter 콜렉션에 저장된 총 개시물 수를 세어보자
+  db.collection("counter").findOne({ name: "numberOfPost" }, (error, result) => {
+    console.log(result.totalpost);
+    // 총 게시물 변수에 저장
+    var totalPost = result.totalpost;
+    // 저장할 내용 오브젝트형식으로 저장.
+    var posting = { _id: totalPost + 1, todoList: req.body.todolist, DueDate: req.body.duedate, createdBy: req.user._id };
+
+    db.collection("post").insertOne(posting, () => {
+      console.log("저장완료");
+
+      // couter라는 콜렉션에 있는 totalPost 항목도 1 증가시켜야 함
+      db.collection("counter").updateOne({ name: "numberOfPost" }, { $inc: { totalpost: 1 } }, (err, result) => {
+        if (err) throw err;
+        console.log("1 document updated");
+      });
+    });
+  });
+  res.redirect("/list");
+});
+
+// 삭제요청 처리하는 코드
+app.delete("/delete", (req, res)ㅇ => {
+  console.log(req.body);
+  req.body._id = parseInt(req.body._id);
+
+  var dataDelete = { _id: req.body._id, createdBy: req.user._id };
+
+  // req.body에 담겨진 게시물번호를 가진 글을 db에서 찾아서 삭제해주세요.
+  db.collection("post").deleteOne(dataDelete, function (error, result) {
+    console.log("delete complete");
+    res.status(200).send({ message: "delete success" });
   });
 });
 
