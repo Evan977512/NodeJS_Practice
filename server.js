@@ -283,3 +283,35 @@ app.get("/search", (req, res) => {
 // api파일(shop.js) require로 불러오기
 app.use("/shop", require("./routes/shop.js"));
 app.use("/board/sub", require("./routes/board.js"));
+
+// upload function
+app.get("/upload", (req, res) => {
+  res.render("upload.ejs");
+});
+
+// multer 사용법 -> 데이터를 쉽게 전송하는 라이브러리
+let multer = require("multer");
+var storage = multer.diskStorage({
+  // 저장 위치 설정
+  destination: (req, file, cb) => {
+    cb(null, "./public/image");
+  },
+  // 파일명 설정...?
+  filename: (req, file, cb) => {
+    cb(null, file.originalname + new Date());
+  },
+});
+
+var upload = multer({
+  storage: storage,
+});
+
+app.post("/upload", upload.single("profile"), (req, res) => {
+  // 여러개의 파일은 'upload.array('input의 name', 최대 x개)' => upload('profile', 10)
+  res.send("saved");
+});
+
+// 업로드한 파일 보는 페이지
+app.get("/image/:imageName", (req, res) => {
+  res.sendFile(__dirname + "/public/image/" + req.params.imageName);
+});
