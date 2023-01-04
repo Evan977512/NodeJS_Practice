@@ -51,7 +51,8 @@
           <p>number: <%= posts[i]._id %></p>
           <h4>name of todolist: <%= posts[i].todoList %></h4>
           <h4>Due Date:<%= posts[i].DueDate %></h4>
-          <button class="delete btn btn-danger" data-id="<%= posts[i]._id %>">DELETE</button>
+          <button class="btn btn-danger delete" data-id="<%= posts[i]._id %>">DELETE</button>
+          <button class="btn btn-secondary chat" data-id="<%= posts[i].createdBy %>">Chat</button>
         </li>
         <% } %>
       </ul>
@@ -77,6 +78,13 @@
           .fail(function (xhr, testStatus, errorThrown) {
             console.log(xhr, testStatus, errorThrown);
           });
+      });
+
+      $(".chat").click(function (e) {
+        var id = e.target.dataset.id;
+        $.post("/chatroom", { SelectedId: id }).then(() => {
+          console.log("chat Success");
+        });
       });
     </script>
 

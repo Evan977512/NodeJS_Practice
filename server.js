@@ -315,3 +315,19 @@ app.post("/upload", upload.single("profile"), (req, res) => {
 app.get("/image/:imageName", (req, res) => {
   res.sendFile(__dirname + "/public/image/" + req.params.imageName);
 });
+
+//<img src="/image/cafe.jpeg"></img>;
+
+// chat id save to DB
+app.post("/chatroom", didYouLoggedIn, (req, res) => {
+  var chatData = {
+    title: "somethingChatroom",
+    //[채팅당한 유저의 id, 채팅을 건 유저의 id]
+    member: [req.body.SelectedId, res.user._id],
+    date: new Date(),
+  };
+
+  db.collection("chatroom")
+    .insertOne(chatData)
+    .then((result) => {});
+});
