@@ -22,8 +22,6 @@ var db;
 
 // DB 연결
 MongoClient.connect(process.env.DB_URL, function (err, client) {
-  // console.log(process.env.DB_URL);
-  // 연결되면 할 일
   if (err) return console.log(err);
 
   db = client.db("CodingApple_todoApp");
@@ -92,7 +90,7 @@ app.get("/list", (req, res) => {
 app.get("/detail/:id", (req, res) => {
   db.collection("post").findOne({ _id: parseInt(req.params.id) }, (err, result) => {
     console.log(result);
-    res.render("detail.ejs", { data: result });
+    res.render("detail.ejs", { data: result }); /** {이런이름으로 : 이런데이터를전송} */
   });
 });
 
